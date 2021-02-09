@@ -200,22 +200,27 @@ process score_alignments {
     #!/usr/bin/env perl
     
     open FILE,"$aln_file";
-    \$seq_length=`grep $hit $aln_file | tr  -s " " "\\t"  | cut -f2  | tr -d "-" | tr -d "\\n" | wc -c`;
-    open L,">${hit}_lenght.txt";
-    print L "\$seq_length\n";
+    \$query_length=`grep $id  $aln_file | tr  -s " " "\\t"  | cut -f2  | tr -d "-" | tr -d "\\n" | wc -c`;
+    \$hit_length=  `grep $hit $aln_file | tr  -s " " "\\t"  | cut -f2  | tr -d "-" | tr -d "\\n" | wc -c`;
+    chomp(\$query_length);
+    chomp(\$hit_length);
     #open L,">${hit}_lenght.txt";
     #print L "\$hit_length\\n";
     open OUT,">${hit}_score.txt";
+    #print OUT "lib\\thit\\tasterisk\\tcolon\\tdot\\tquery_length\\thit_length\\tscore\\n";
     while(<FILE>){
-      next unless /[\\*:.]/;
-      \$asterisk=  tr/\\*//; 
-      \$colon=  tr/://; 
-      \$dot=  tr/\\.//; 
-      \$score=(\$asterisk*100+\$colon*70+\$dot*30)/\$seq_length;
+      next unless /$hit/;
+      \$_=<FILE>;
+      \$asterisk+=  tr/\\*//; 
+      \$colon+=  tr/://; 
+      \$dot+=  tr/\\.//; 
+      
     } 
-    print OUT "$lib\t$hit\t\$score\\n";
+    \$score=(\$asterisk*100+\$colon*70+\$dot*30)/\$query_length;
+    print OUT "$lib\\t$hit\\t\$asterisk\\t\$colon\\t\$dot\\t\$query_length\\t\$hit_length\\t\$score\\n";
   """
 }
+
 
 process collect_scores {
   tag "collect scores in single file for query $id"
