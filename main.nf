@@ -48,14 +48,15 @@ process get_queries {
   cpus 1
 
   input:
-    val id 
+    path('db') from Channel.fromPath(params.db)
+    val id
 
   output:
     tuple val(id), path('*.fasta') optional true into seqsOut
 
   script:
   """
-  samtools faidx $params.db $id -o ${id}.fasta
+  samtools faidx $db $id -o ${id}.fasta
   """
 }
 
@@ -111,13 +112,14 @@ process reciprocal_jackhammers {
     //validExitStatus 0,1
 
     input:
+      path('db') from Channel.fromPath(params.db)
       tuple val(id),val(lib),path ('lib.fasta'),path("hits.fasta") from fastas
     output:
       tuple val(id),val(lib),path ('lib.fasta'),path("hits_doms.txt") into reciprocal_jackhammers
       
   script:
   """
-    jackhmmer  --seed 1 --cpu $task.cpus -o hits_out.txt --domtblout hits_doms.txt hits.fasta $params.db
+    jackhmmer  --seed 1 --cpu $task.cpus -o hits_out.txt --domtblout hits_doms.txt hits.fasta $db
   """
 }
 
