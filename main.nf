@@ -14,12 +14,13 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run  -profile standard --outdir /output/path --ids ids_file.txt
+    nextflow run icases/getit --ids ids_file.txt --db db.fasta --libs libs.txt 
     
     Options:
       --ids                         file containing the ids of the proteins, one per line
-      --db                          path to main db
-      --libs                        file containing the name of each libs and its path, comma separated, one per line
+      --db                          path to queries fasta file
+      --libs                        file containing the name of each species db and its path, comma separated, one per line
+    
     Other options:
       --outdir                      The output directory where the results will be saved (default: $outdir)
       -w/--work-dir                 The temporary directory where intermediate data will be saved
