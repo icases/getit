@@ -193,8 +193,6 @@ process score_alignments {
     tuple val(hit),val (id),val(lib),path(aln_file) from alignments
   output: 
     tuple val(id), path( "*_score.txt") into scores
-    path("*_lenght.txt")
-    //path("*_lenght.txt")
   script:
   """
     #!/usr/bin/env perl
