@@ -203,11 +203,8 @@ process score_alignments {
     \$query_length=`grep $id  $aln_file | tr  -s " " "\\t"  | cut -f2  | tr -d "-" | tr -d "\\n" | wc -c`;
     \$hit_length=  `grep $hit $aln_file | tr  -s " " "\\t"  | cut -f2  | tr -d "-" | tr -d "\\n" | wc -c`;
     chomp(\$query_length);
-    chomp(\$hit_length);
-    #open L,">${hit}_lenght.txt";
-    #print L "\$hit_length\\n";
+    chomp(\$hit_length);  
     open OUT,">${hit}_score.txt";
-    #print OUT "lib\\thit\\tasterisk\\tcolon\\tdot\\tquery_length\\thit_length\\tscore\\n";
     while(<FILE>){
       next unless /$hit/;
       \$_=<FILE>;
