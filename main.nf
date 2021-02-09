@@ -39,6 +39,7 @@ libs = Channel.fromPath(params.libs).
   ifEmpty { error "No libs at ${params.libs}" }
 
 //id_libs=id.combine(libs).flatten().collate(3)
+db = file(params.db)
 
 process get_queries {
   tag "getting sequence for query $id"
@@ -48,7 +49,6 @@ process get_queries {
   cpus 1
 
   input:
-    path('db') from Channel.fromPath(params.db)
     val id
 
   output:
@@ -112,7 +112,6 @@ process reciprocal_jackhammers {
     //validExitStatus 0,1
 
     input:
-      path('db') from Channel.fromPath(params.db)
       tuple val(id),val(lib),path ('lib.fasta'),path("hits.fasta") from fastas
     output:
       tuple val(id),val(lib),path ('lib.fasta'),path("hits_doms.txt") into reciprocal_jackhammers
