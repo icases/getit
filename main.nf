@@ -194,6 +194,7 @@ process score_alignments {
   output: 
     tuple val(id), path( "*_score.txt") into scores
     path("*_lenght.txt")
+    //path("*_lenght.txt")
   script:
   """
     #!/usr/bin/env perl
@@ -202,6 +203,8 @@ process score_alignments {
     \$seq_length=`grep $hit $aln_file | tr  -s " " "\\t"  | cut -f2  | tr -d "-" | tr -d "\\n" | wc -c`;
     open L,">${hit}_lenght.txt";
     print L "\$seq_length\n";
+    #open L,">${hit}_lenght.txt";
+    #print L "\$hit_length\\n";
     open OUT,">${hit}_score.txt";
     while(<FILE>){
       next unless /[\\*:.]/;
