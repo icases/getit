@@ -227,6 +227,7 @@ process collect_scores {
      path "${id}_scores.txt"
   script:
   """
+   cp  $projectDir/assets/scores_template.txt ${id}_scores.txt
    cat $score_file >> ${id}_scores.txt
   """
 }
