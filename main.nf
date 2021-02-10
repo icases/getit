@@ -45,7 +45,7 @@ db = file(params.db)
 process get_queries {
   tag "getting sequence for query $id"
   //echo true
-  publishDir "$params.outdir/$id/" 
+  //publishDir "$params.outdir/$id/" , mode:'copy'
   //errorStrategy 'ignore'
 
   input:
@@ -64,7 +64,7 @@ process jackhammer {
 
   tag "perform jackhammers for $id at $lib"
   //echo true
-  publishDir "$params.outdir/$id/$lib/"
+  publishDir "$params.outdir/$id/$lib/",pattern:'*.txt',mode:'copy'
   label 'hmmer'
 
 
@@ -84,14 +84,14 @@ process jackhammer {
 process get_hits {
   tag "get hits from first jackhammer  for $id at $lib"
   //echo true
-  publishDir "$params.outdir/$id/$lib/"
+  publishDir "$params.outdir/$id/$lib/",pattern:'*.txt',mode:'copy'
   //errorStrategy 'ignore'
 
   input:
     tuple val(id),val(lib),path ('lib.fasta'),path("doms.txt") from jackhmmerTables
   output:
     tuple val(id),val(lib),path ('lib.fasta'),path("*_hits.fasta") optional true into fastas
-  
+    path("*_ids.txt")
   script:
   """
     grep -v "#" doms.txt  | cut -f1 -d" "| sort | uniq | grep . | cat > ${lib}_ids.txt
@@ -107,7 +107,7 @@ process reciprocal_jackhammers {
     label 'hmmer'
     tag "run reciprocal jackhammers for $id at $lib "
     //echo true
-    publishDir "$params.outdir/$id/$lib/hits/"
+    publishDir "$params.outdir/$id/$lib/hits/",pattern:"*_doms.txt",mode:'copy'
     //validExitStatus 0,1
 
     input:
@@ -124,7 +124,7 @@ process reciprocal_jackhammers {
 process find_reciprocal_hits{
   tag "find reciprocal hits for $id at $lib"
   //echo true
-  publishDir "$params.outdir/$id/$lib/hits/"
+  publishDir "$params.outdir/$id/$lib/hits/",mode:'copy'
   errorStrategy 'ignore'
   
 
@@ -143,7 +143,7 @@ process find_reciprocal_hits{
 process get_reciprocal_seqs {
   tag "get sequences of reciprocal hits $hit for $id at $lib"
   //echo true
-  publishDir "$params.outdir/$id/$lib/hits/"
+  //publishDir "$params.outdir/$id/$lib/hits/"
   
 
   input:
@@ -162,7 +162,7 @@ process get_reciprocal_seqs {
 process alingments {
   tag "run alignments for $id with $hit at $lib"
   //echo true
-  publishDir "$params.outdir/$id/$lib/hits/$hit"
+  publishDir "$params.outdir/$id/$lib/hits/$hit",mode:'copy'
   //errorStrategy 'finish'
   label 'mafft'
 
@@ -186,7 +186,7 @@ process alingments {
 process score_alignments {
   
   tag "score alignments for $id and $hit from $lib"
-  publishDir "$params.outdir/$id/$lib/hits/$hit"
+  publishDir "$params.outdir/$id/$lib/hits/$hit",mode:'copy'
   
 
   input:
@@ -219,8 +219,7 @@ process score_alignments {
 
 process collect_scores {
   tag "collect scores in single file for query $id"
-  publishDir "$params.outdir/$id/"
-  
+  publishDir "$params.outdir/$id/", mode: 'copy'
   
   input:
      tuple val(id),path(score_file) from scores.groupTuple()
