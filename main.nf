@@ -45,7 +45,7 @@ db = file(params.db)
 process get_queries {
   tag "getting sequence for query $id"
   //echo true
-  //publishDir "$params.outdir/$id/" , mode:'copy'
+  publishDir "$params.outdir/$id/" , mode:'copy'
   //errorStrategy 'ignore'
 
   input:
