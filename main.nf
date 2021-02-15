@@ -30,7 +30,7 @@ def helpMessage() {
 
 
 id = Channel.fromPath(params.ids).
-  splitText(){it.replaceFirst(/\n/, "")}.
+  splitText(){it.trim()}.
   take( params.sample ). // for testing pourposes
   ifEmpty { error "No ids at  ${params.ids}" }
 
