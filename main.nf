@@ -198,8 +198,10 @@ process score_alignments {
     #!/usr/bin/env perl
     
     open FILE,"$aln_file";
-    \$query_length=`grep $id  $aln_file | tr  -s " " "\\t"  | cut -f2  | tr -d "-" | tr -d "\\n" | wc -c`;
-    \$hit_length=  `grep $hit $aln_file | tr  -s " " "\\t"  | cut -f2  | tr -d "-" | tr -d "\\n" | wc -c`;
+    \$my_id=substr("$id",0,15);
+    \$my_hit=substr("$hit",0,15);
+    \$query_length=`grep \$my_id  $aln_file | tr  -s " " "\\t"  | cut -f2  | tr -d "-" | tr -d "\\n" | wc -c`;
+    \$hit_length=  `grep \$my_hit  $aln_file | tr  -s " " "\\t"  | cut -f2  | tr -d "-" | tr -d "\\n" | wc -c`;
     chomp(\$query_length);
     chomp(\$hit_length);  
     open OUT,">${hit}_score.txt";
