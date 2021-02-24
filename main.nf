@@ -206,7 +206,7 @@ process score_alignments {
     chomp(\$hit_length);  
     open OUT,">${hit}_score.txt";
     while(<FILE>){
-      next unless /$hit/;
+      next unless /\$my_hit/;
       \$_=<FILE>;
       \$asterisk+=  tr/\\*//; 
       \$colon+=  tr/://; 
